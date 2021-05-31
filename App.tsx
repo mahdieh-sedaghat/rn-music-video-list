@@ -9,15 +9,12 @@
  */
 
 import React from 'react';
-import Screen from './app/components/Screen';
+// import ListItem from './app/components/ListItem';
+// import Screen from './app/components/Screen';
 import MusicVideosScreen from './app/screens/MusicVideosScreen';
 
 const App = () => {
-  return (
-    <Screen>
-      <MusicVideosScreen />
-    </Screen>
-  );
+  return <MusicVideosScreen />;
 };
 
 export default App;
