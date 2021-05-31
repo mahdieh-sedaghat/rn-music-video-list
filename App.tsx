@@ -10,8 +10,6 @@
 
 import React from 'react';
 import Screen from './app/components/Screen';
-// import ListItem from './app/components/ListItem';
-// import Screen from './app/components/Screen';
 import MusicVideosScreen from './app/screens/MusicVideosScreen';
 
 const App = () => {
@@ -19,13 +17,6 @@ const App = () => {
     <Screen>
       <MusicVideosScreen />
     </Screen>
-    // <Screen>
-    //   <ListItem
-    //     title="hi"
-    //     subTitle="how areb you"
-    //     image="https://raw.githubusercontent.com/XiteTV/frontend-coding-exercise/679a82b1e7110c16e14412f1debaa118c10078a9/images/501437/images/app/w522_h292.jpg"
-    //   />
-    // </Screen>
   );
 };
 
