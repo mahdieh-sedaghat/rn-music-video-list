@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Dimensions, Platform, StatusBar, StyleSheet, View} from 'react-native';
 import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
+import AppSearchInput from '../../components/AppSearchInput';
 
 import AppText from '../../components/AppText';
-import AppTextInput from '../../components/AppTextInput';
 import ListItem from '../../components/ListItem';
 import defaultStyles from '../../config/styles';
 import MusicVideoAPI from '../../services/API/MusicVideoAPI';
@@ -91,7 +91,7 @@ function MusicVideosScreen() {
         <AppText style={styles.description}>
           Search in Milion and more tracks
         </AppText>
-        <AppTextInput placeholder="Artists, Songs, Or Podcats" />
+        <AppSearchInput />
       </View>
       <RecyclerListView
         layoutProvider={layoutProvider}
