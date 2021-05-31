@@ -24,9 +24,8 @@ function Screen({children}: IProps) {
 const styles = StyleSheet.create({
   screen: {
     backgroundColor: defaultStyles.colors.bg,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 32 : 32,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     flex: 1,
-    alignItems: 'center',
   },
 });
 
