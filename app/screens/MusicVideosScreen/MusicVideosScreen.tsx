@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
 import AppText from '../../components/AppText';
+import AppTextInput from '../../components/AppTextInput';
 import ListItem from '../../components/ListItem';
 import colors from '../../config/colors';
 import MusicVideoAPI from '../../services/API/MusicVideoAPI';
@@ -68,12 +69,6 @@ function MusicVideosScreen() {
           subTitle={data[0].title}
           image={data[0].image_url}
         />
-        {/* <ListItem
-          title={data[1].artist}
-          subTitle={data[1].title}
-          image={data[1].image_url}
-          size={width}
-        /> */}
       </View>
     );
   };
@@ -90,6 +85,7 @@ function MusicVideosScreen() {
         Search in Milion and more tracks Search in Milion and more tracks Search
         in Milion and more tracks
       </AppText>
+      <AppTextInput placeholder="Artists, Songs, Or Podcats" />
       <RecyclerListView
         layoutProvider={layoutProvider}
         dataProvider={dataProvider}
@@ -121,7 +117,6 @@ const styles = StyleSheet.create({
     lineHeight: 12,
     fontWeight: '300',
     color: colors.gray,
-    marginBottom: 20,
   },
   row: {justifyContent: 'center'},
   title: {
