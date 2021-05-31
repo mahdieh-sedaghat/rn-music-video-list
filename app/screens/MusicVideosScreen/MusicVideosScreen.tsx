@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, Platform, StatusBar, StyleSheet, View} from 'react-native';
 import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
 
 import AppText from '../../components/AppText';
@@ -24,8 +24,8 @@ function MusicVideosScreen() {
     new LayoutProvider(
       index => 1,
       (type, dim) => {
-        dim.width = (width - 64) / 2;
-        dim.height = width;
+        dim.width = width - 48;
+        dim.height = (2 * width) / 3;
       },
     ),
   );
@@ -64,11 +64,16 @@ function MusicVideosScreen() {
 
   const rowRenderer = (type, data, index) => {
     return (
-      <View>
+      <View style={styles.row}>
         <ListItem
           title={data[0].artist}
           subTitle={data[0].title}
           image={data[0].image_url}
+        />
+        <ListItem
+          title={data[1].artist}
+          subTitle={data[1].title}
+          image={data[1].image_url}
         />
       </View>
     );
@@ -81,12 +86,13 @@ function MusicVideosScreen() {
 
   return (
     <View style={styles.container}>
-      <AppText style={styles.title}>Discover</AppText>
-      <AppText style={styles.description}>
-        Search in Milion and more tracks Search in Milion and more tracks Search
-        in Milion and more tracks
-      </AppText>
-      <AppTextInput placeholder="Artists, Songs, Or Podcats" />
+      <View style={{paddingHorizontal: width * 0.064}}>
+        <AppText style={styles.title}>Discover</AppText>
+        <AppText style={styles.description}>
+          Search in Milion and more tracks
+        </AppText>
+        <AppTextInput placeholder="Artists, Songs, Or Podcats" />
+      </View>
       <RecyclerListView
         layoutProvider={layoutProvider}
         dataProvider={dataProvider}
@@ -104,6 +110,7 @@ function MusicVideosScreen() {
         //       />
         //     )
         //   }}
+        scrollViewProps={{style: {paddingHorizontal: width * 0.064}}}
       />
     </View>
   );
@@ -112,6 +119,8 @@ function MusicVideosScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: defaultStyles.colors.bg,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 24 : 24,
   },
   description: {
     fontSize: 12,
@@ -119,7 +128,10 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     color: defaultStyles.colors.gray,
   },
-  row: {justifyContent: 'center'},
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   title: {
     fontSize: 20,
     lineHeight: 20,

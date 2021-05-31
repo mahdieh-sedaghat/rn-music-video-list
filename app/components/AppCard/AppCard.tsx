@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Dimensions, Image, StyleSheet, View} from 'react-native';
 
 import AppText from '../AppText';
 import defaultStyles from '../../config/styles';
@@ -23,17 +23,18 @@ const AppCard = ({title, subTitle, image}: IProps) => {
 const styles = StyleSheet.create({
   card: {
     width: '100%',
+    padding: 8,
   },
   image: {
     width: '100%',
-    height: 150,
-    marginBottom: 16,
+    height: Dimensions.get('window').width / 2 - 40,
+    marginBottom: 12,
     borderRadius: 16,
     resizeMode: 'cover',
   },
   subTitle: {
     color: defaultStyles.colors.gray,
-    fontSize: 12,
+    fontSize: 10,
   },
   title: {
     color: defaultStyles.colors.white,
