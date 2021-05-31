@@ -7,6 +7,7 @@ import {
   StatusBar,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import AppPicker from '../../components/AppPicker';
 import AppText from '../../components/AppText';
 import defaultStyles from '../../config/styles';
 
@@ -32,6 +33,17 @@ function FilterScreen({handleVisible}: IProps) {
         </TouchableHighlight>
         <AppText style={styles.title}>Filter</AppText>
       </View>
+      <AppPicker
+        title="Year"
+        placeholder="Select Year"
+        onPress={() => {}}
+        style={styles.picker}
+      />
+      <AppPicker
+        title="Genre"
+        placeholder="Select Genre(s)"
+        onPress={() => {}}
+      />
     </>
   );
 }
@@ -56,6 +68,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 12,
     top: 12,
+  },
+  picker: {
+    borderBottomColor: defaultStyles.colors.gray,
+    borderBottomWidth: 1,
   },
   title: {fontSize: 16, fontWeight: '600'},
 });
