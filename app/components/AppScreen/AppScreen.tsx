@@ -13,7 +13,7 @@ interface IProps {
   children: any;
 }
 
-function Screen({children}: IProps) {
+function AppScreen({children}: IProps) {
   return (
     <SafeAreaView style={styles.screen}>
       <View>{children}</View>
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Screen;
+export default AppScreen;

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Modal} from 'react-native';
-import Screen from '../Screen';
+import AppScreen from '../AppScreen';
 
 interface IProps {
   children: any;
@@ -10,7 +10,7 @@ interface IProps {
 function AppModal({children, visible}: IProps) {
   return (
     <Modal visible={visible} animationType="slide">
-      <Screen>{children}</Screen>
+      <AppScreen>{children}</AppScreen>
     </Modal>
   );
 }
