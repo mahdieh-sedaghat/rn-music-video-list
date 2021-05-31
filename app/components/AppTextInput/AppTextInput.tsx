@@ -1,6 +1,7 @@
 import React from 'react';
-import {Platform, StyleSheet, TextInput, View} from 'react-native';
-import colors from '../../config/colors';
+import {StyleSheet, TextInput, View} from 'react-native';
+
+import defaultStyles from '../../config/styles';
 
 interface IProps {
   placeholder?: string;
@@ -10,9 +11,9 @@ function AppTextInput({placeholder}: IProps) {
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.textInput}
+        style={defaultStyles.text}
         placeholder={placeholder || 'Type here...'}
-        placeholderTextColor={colors.gray}
+        placeholderTextColor={defaultStyles.colors.gray}
       />
     </View>
   );
@@ -20,18 +21,12 @@ function AppTextInput({placeholder}: IProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.secondary,
+    backgroundColor: defaultStyles.colors.secondary,
     borderRadius: 50,
     flexDirection: 'row',
     width: '100%',
     padding: 8,
     marginVertical: 24,
-  },
-  textInput: {
-    fontSize: 14,
-    fontFamily: Platform.OS === 'android' ? 'Roboto' : 'Avenir',
-    fontWeight: '400',
-    color: colors.white,
   },
 });
 

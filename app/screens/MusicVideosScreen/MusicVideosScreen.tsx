@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
+
 import AppText from '../../components/AppText';
 import AppTextInput from '../../components/AppTextInput';
 import ListItem from '../../components/ListItem';
-import colors from '../../config/colors';
+import defaultStyles from '../../config/styles';
 import MusicVideoAPI from '../../services/API/MusicVideoAPI';
 
 function MusicVideosScreen() {
@@ -116,14 +117,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 12,
     fontWeight: '300',
-    color: colors.gray,
+    color: defaultStyles.colors.gray,
   },
   row: {justifyContent: 'center'},
   title: {
     fontSize: 20,
     lineHeight: 20,
     fontWeight: '600',
-    color: colors.white,
+    color: defaultStyles.colors.white,
     marginBottom: 8,
   },
 });

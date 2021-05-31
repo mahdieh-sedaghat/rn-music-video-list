@@ -1,7 +1,8 @@
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
-import colors from '../../config/colors';
+
 import AppText from '../AppText';
+import defaultStyles from '../../config/styles';
 
 interface IProps {
   title: string;
@@ -31,11 +32,11 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   subTitle: {
-    color: colors.gray,
+    color: defaultStyles.colors.gray,
     fontSize: 12,
   },
   title: {
-    color: colors.white,
+    color: defaultStyles.colors.white,
     fontSize: 14,
     marginBottom: 4,
   },

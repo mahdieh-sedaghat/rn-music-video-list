@@ -6,7 +6,8 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import colors from '../../config/colors';
+
+import defaultStyles from '../../config/styles';
 
 interface IProps {
   children: any;
@@ -22,7 +23,7 @@ function Screen({children}: IProps) {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: colors.bg,
+    backgroundColor: defaultStyles.colors.bg,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 32 : 32,
     flex: 1,
     alignItems: 'center',

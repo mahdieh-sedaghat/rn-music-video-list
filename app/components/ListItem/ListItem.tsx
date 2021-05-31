@@ -1,6 +1,7 @@
 import React from 'react';
 import {TouchableHighlight} from 'react-native';
-import colors from '../../config/colors';
+
+import defaultStyles from '../../config/styles';
 import AppCard from '../AppCard';
 
 interface IProps {
@@ -11,7 +12,9 @@ interface IProps {
 
 function ListItem({title, subTitle, image}: IProps) {
   return (
-    <TouchableHighlight underlayColor={colors.white} onPress={() => {}}>
+    <TouchableHighlight
+      underlayColor={defaultStyles.colors.white}
+      onPress={() => {}}>
       <AppCard
         title={title}
         subTitle={subTitle}
