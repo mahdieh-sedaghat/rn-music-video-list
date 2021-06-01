@@ -1,6 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Dimensions, Platform, StatusBar, StyleSheet, View} from 'react-native';
-import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
+import {
+  Dimensions,
+  FlatList,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import AppText from '../../components/AppText';
 import AppTextInput from '../../components/AppTextInput';
@@ -10,78 +16,25 @@ import MusicVideoAPI from '../../services/API/MusicVideoAPI';
 
 function MusicVideosScreen() {
   const [musicVideoList, setMusicVideoList] = useState([]);
-  const [twoColumnList, setTwoColumnList] = useState([]);
-  const [renderedList, setRenderedList] = useState(twoColumnList.slice(0, 6));
-  const [pageNumber, setPageNumber] = useState(0);
+  const [renderedList, setRenderedList] = useState(musicVideoList.slice(0, 6));
+  const [pageNumber, setPageNumber] = useState(1);
 
   const {width} = Dimensions.get('window');
-  const [dataProvider, setDataProvider] = useState(
-    new DataProvider((r1, r2) => {
-      return r1 !== r2;
-    }),
-  );
-  const [layoutProvider] = useState(
-    new LayoutProvider(
-      index => 1,
-      (type, dim) => {
-        dim.width = width - 48;
-        dim.height = (2 * width) / 3;
-      },
-    ),
-  );
 
   useEffect(() => {
     async function getList() {
       const response = await MusicVideoAPI.getMusicVideoList();
-      // setGenreList(response?.data?.genres);
       setMusicVideoList(response?.data?.videos);
     }
     getList();
   }, []);
 
-  const generateTwoColumnList = (data: any) => {
-    let i,
-      j,
-      temp: any = [],
-      chunk = 2;
-    for (i = 0, j = data.length; i < j; i += chunk) {
-      temp.push(data.slice(i, i + chunk));
-    }
-    setTwoColumnList(temp);
-  };
-
   useEffect(() => {
-    generateTwoColumnList(musicVideoList);
-  }, [musicVideoList]);
-
-  useEffect(() => {
-    setDataProvider(prevState => prevState.cloneWithRows(renderedList));
-  }, [renderedList]);
-
-  useEffect(() => {
-    setRenderedList(twoColumnList.slice(0, pageNumber * 6));
-  }, [pageNumber, twoColumnList]);
-
-  const rowRenderer = (type, data, index) => {
-    return (
-      <View style={styles.row}>
-        <ListItem
-          title={data[0].artist}
-          subTitle={data[0].title}
-          image={data[0].image_url}
-        />
-        <ListItem
-          title={data[1].artist}
-          subTitle={data[1].title}
-          image={data[1].image_url}
-        />
-      </View>
-    );
-  };
+    setRenderedList(musicVideoList.slice(0, pageNumber * 6));
+  }, [pageNumber, musicVideoList]);
 
   const loadMore = () => {
     setPageNumber(pageNumber + 1);
-    setDataProvider(prevState => prevState.cloneWithRows(renderedList));
   };
 
   return (
@@ -93,30 +46,31 @@ function MusicVideosScreen() {
         </AppText>
         <AppTextInput placeholder="Artists, Songs, Or Podcats" />
       </View>
-      <RecyclerListView
-        layoutProvider={layoutProvider}
-        dataProvider={dataProvider}
-        rowRenderer={rowRenderer}
+      <FlatList
         onEndReached={loadMore}
-        onEndReachedThreshold={25}
-        //   renderFooter={renderFooter}
-        renderAheadOffset={0}
-        ListEmptyComponent={<></>}
-        //   scrollViewProps={{
-        //     refreshControl: (
-        //       <RefreshControl
-        //         refreshing={networkStatus === 4}
-        //         onRefresh={() => refetch()}
-        //       />
-        //     )
-        //   }}
-        scrollViewProps={{style: {paddingHorizontal: width * 0.064}}}
+        data={renderedList}
+        keyExtractor={(item: any) => item?.id?.toString()}
+        style={styles.flatList}
+        numColumns={2}
+        columnWrapperStyle={styles.columnStyle}
+        renderItem={({item}) => (
+          <ListItem
+            title={item.artist}
+            subTitle={item.title}
+            image={item.image_url}
+          />
+        )}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  columnStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 24,
+  },
   container: {
     flex: 1,
     backgroundColor: defaultStyles.colors.bg,
@@ -128,6 +82,7 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     color: defaultStyles.colors.gray,
   },
+  flatList: {paddingHorizontal: 24},
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
