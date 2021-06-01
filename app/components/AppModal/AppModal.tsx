@@ -36,7 +36,6 @@ function AppModal({children, visible, handleVisible}: IProps) {
           </TouchableHighlight>
           <AppText style={styles.title}>Filter</AppText>
         </View>
-
         {children}
       </AppScreen>
     </Modal>

@@ -1,6 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Dimensions, Platform, StatusBar, StyleSheet, View} from 'react-native';
-import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
+import {
+  Dimensions,
+  FlatList,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
 import AppSearchInput from '../../components/AppSearchInput';
 
 import AppText from '../../components/AppText';
@@ -18,20 +24,6 @@ function MusicVideosScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<IFilter>();
   const [isFiltered, setIsFiltered] = useState<boolean>(false);
-  const [dataProvider, setDataProvider] = useState(
-    new DataProvider((r1, r2) => {
-      return r1 !== r2;
-    }),
-  );
-  const [layoutProvider] = useState(
-    new LayoutProvider(
-      index => 1,
-      (type, dim) => {
-        dim.width = width - 48;
-        dim.height = (2 * width) / 3;
-      },
-    ),
-  );
 
   useEffect(() => {
     async function getList() {
@@ -43,28 +35,11 @@ function MusicVideosScreen() {
   }, []);
 
   useEffect(() => {
-    setDataProvider(prevState => prevState.cloneWithRows(renderedList));
-  }, [renderedList]);
-
-  useEffect(() => {
     setRenderedList(searchResult.slice(0, pageNumber * 6));
   }, [pageNumber, searchResult]);
 
-  const rowRenderer = (type, data, index) => {
-    return (
-      <View style={styles.row}>
-        <ListItem
-          title={data.artist}
-          subTitle={data.title}
-          image={data.image_url}
-        />
-      </View>
-    );
-  };
-
   const loadMore = () => {
     setPageNumber(pageNumber + 1);
-    setDataProvider(prevState => prevState.cloneWithRows(renderedList));
   };
 
   const showSearchFilterResult = () => {
@@ -115,36 +90,33 @@ function MusicVideosScreen() {
           setIsFiltered={setIsFiltered}
         />
       </View>
-      <RecyclerListView
-        layoutProvider={layoutProvider}
-        dataProvider={dataProvider}
-        rowRenderer={rowRenderer}
+      <FlatList
         onEndReached={loadMore}
-        onEndReachedThreshold={25}
-        //   renderFooter={renderFooter}
-        renderAheadOffset={0}
-        ListEmptyComponent={<></>}
-        //   scrollViewProps={{
-        //     refreshControl: (
-        //       <RefreshControl
-        //         refreshing={networkStatus === 4}
-        //         onRefresh={() => refetch()}
-        //       />
-        //     )
-        //   }}
-        scrollViewProps={{
-          style: {paddingHorizontal: width * 0.064},
-        }}
+        data={renderedList}
+        keyExtractor={(item: any) => item?.id?.toString()}
+        style={styles.flatList}
+        numColumns={2}
+        columnWrapperStyle={styles.columnStyle}
+        renderItem={({item}) => (
+          <ListItem
+            title={item.artist}
+            subTitle={item.title}
+            image={item.image_url}
+          />
+        )}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  columnStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 24,
+  },
   container: {
-    flex: 1,
-    backgroundColor: defaultStyles.colors.bg,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 24 : 24,
+    paddingTop: 24,
   },
   description: {
     fontSize: 12,
@@ -152,6 +124,7 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     color: defaultStyles.colors.gray,
   },
+  flatList: {paddingHorizontal: 24},
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
