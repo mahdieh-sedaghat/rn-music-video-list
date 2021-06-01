@@ -1,11 +1,20 @@
-import React from 'react';
-import {FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {
+  Dimensions,
+  FlatList,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
 import AppText from '../../components/AppText';
 import getYearsRange from '../../utils/yearsRange';
 import defaultStyles from '../../config/styles';
 import {IFilter} from '../../types/filter';
+import AppButton from '../../components/AppButton';
 
 interface IProps {
   selectedFilter: IFilter;
@@ -20,26 +29,38 @@ function YearsScreen({
 }: IProps) {
   const years = getYearsRange();
 
-  const onSelectYear = (selectedYear: any) => {
+  const [selectedYear, setSelectedYear] = useState<any>();
+
+  const onSelectYear = () => {
     setSelectedFilter({...selectedFilter, year: selectedYear});
     setYearModalVisible(false);
   };
 
   return (
-    <FlatList
-      data={years}
-      keyExtractor={(item: any) => item.key.toString()}
-      renderItem={({item}) => (
-        <TouchableOpacity
-          onPress={() => onSelectYear(item)}
-          style={styles.item}>
-          <AppText>{item?.value}</AppText>
-          {item?.key === selectedFilter?.year?.key && (
-            <Icon name="check" color={defaultStyles.colors.white} size={20} />
-          )}
-        </TouchableOpacity>
-      )}
-    />
+    <View
+      style={{
+        height:
+          Dimensions.get('window').height -
+          72 -
+          (Platform.OS === 'android' ? StatusBar.currentHeight : 0),
+      }}>
+      <FlatList
+        style={styles.list}
+        data={years}
+        keyExtractor={(item: any) => item.key.toString()}
+        renderItem={({item}) => (
+          <TouchableOpacity
+            onPress={() => setSelectedYear(item)}
+            style={styles.item}>
+            <AppText>{item?.value}</AppText>
+            {item?.key === selectedYear?.key && (
+              <Icon name="check" color={defaultStyles.colors.white} size={20} />
+            )}
+          </TouchableOpacity>
+        )}
+      />
+      <AppButton title="Show Result" onPress={onSelectYear} />
+    </View>
   );
 }
 
@@ -56,6 +77,7 @@ const styles = StyleSheet.create({
     borderBottomColor: defaultStyles.colors.hover,
     borderBottomWidth: 1,
   },
+  list: {flex: 1},
 });
 
 export default YearsScreen;
