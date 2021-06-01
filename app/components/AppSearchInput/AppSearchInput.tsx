@@ -9,13 +9,22 @@ import Icon from 'react-native-vector-icons/Feather';
 
 import defaultStyles from '../../config/styles';
 import FilterScreen from '../../screens/FilterScreen';
+import {IFilter} from '../../types/filter';
 import AppModal from '../AppModal/AppModal';
 
 interface IProps {
   setSearchQuery: (data: any) => void;
+  selectedFilter: IFilter;
+  setSelectedFilter: (data: IFilter) => void;
+  setIsFiltered: (data: boolean) => void;
 }
 
-function AppSearchInput({setSearchQuery}: IProps) {
+function AppSearchInput({
+  setSearchQuery,
+  selectedFilter,
+  setSelectedFilter,
+  setIsFiltered,
+}: IProps) {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleSearch = (text: string) => {
@@ -34,7 +43,7 @@ function AppSearchInput({setSearchQuery}: IProps) {
           style={styles.search}
         />
         <TextInput
-          style={[defaultStyles.text, { flex: 1 }]}
+          style={[defaultStyles.text, {flex: 1}]}
           placeholder="Artists, Songs, Or Podcats"
           placeholderTextColor={defaultStyles.colors.gray}
           onChangeText={text => handleSearch(text)}
@@ -46,7 +55,12 @@ function AppSearchInput({setSearchQuery}: IProps) {
         </TouchableWithoutFeedback>
       </View>
       <AppModal visible={modalVisible} handleVisible={setModalVisible}>
-        <FilterScreen />
+        <FilterScreen
+          selectedFilter={selectedFilter}
+          setSelectedFilter={setSelectedFilter}
+          setFilterModalVisible={setModalVisible}
+          setIsFiltered={setIsFiltered}
+        />
       </AppModal>
     </>
   );

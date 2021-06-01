@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Dimensions,
-  FlatList,
-  Platform,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {Dimensions, Platform, StatusBar, StyleSheet, View} from 'react-native';
 import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
 import AppSearchInput from '../../components/AppSearchInput';
 
@@ -14,14 +7,17 @@ import AppText from '../../components/AppText';
 import ListItem from '../../components/ListItem';
 import defaultStyles from '../../config/styles';
 import MusicVideoAPI from '../../services/API/MusicVideoAPI';
+import {IFilter} from '../../types/filter';
 
 function MusicVideosScreen() {
   const {width} = Dimensions.get('window');
   const [musicVideoList, setMusicVideoList] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const [renderedList, setRenderedList] = useState(musicVideoList.slice(0, 6));
-  const [pageNumber, setPageNumber] = useState(0);
+  const [pageNumber, setPageNumber] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState<IFilter>();
+  const [isFiltered, setIsFiltered] = useState<boolean>(false);
   const [dataProvider, setDataProvider] = useState(
     new DataProvider((r1, r2) => {
       return r1 !== r2;
@@ -54,10 +50,6 @@ function MusicVideosScreen() {
     setRenderedList(searchResult.slice(0, pageNumber * 6));
   }, [pageNumber, searchResult]);
 
-  useEffect(() => {
-    generateSearchResult();
-  }, [searchQuery]);
-
   const rowRenderer = (type, data, index) => {
     return (
       <View style={styles.row}>
@@ -75,38 +67,54 @@ function MusicVideosScreen() {
     setDataProvider(prevState => prevState.cloneWithRows(renderedList));
   };
 
-  const generateSearchResult = () => {
+  const showSearchFilterResult = () => {
+    let temp = musicVideoList;
+
     if (searchQuery?.length) {
-      setSearchResult(
-        searchResult?.filter(
-          (item: any) =>
-            item?.artist
-              ?.toString()
-              ?.toLowerCase()
-              ?.includes(searchQuery?.toLowerCase()) ||
-            item?.title
-              ?.toString()
-              ?.toLowerCase()
-              .includes(searchQuery?.toLowerCase()),
-        ),
+      temp = temp?.filter(
+        (item: any) =>
+          item?.artist
+            ?.toString()
+            ?.toLowerCase()
+            ?.includes(searchQuery?.toLowerCase()) ||
+          item?.title
+            ?.toString()
+            ?.toLowerCase()
+            .includes(searchQuery?.toLowerCase()),
       );
-    } else {
-      setSearchResult(musicVideoList);
     }
-    setPageNumber(1);
+
+    if (isFiltered) {
+      if (selectedFilter?.year?.key) {
+        temp = temp?.filter(
+          (item: any) => item?.release_year === selectedFilter?.year?.value,
+        );
+      }
+      if (selectedFilter?.genres?.length) {
+      }
+    }
+
+    setSearchResult(temp);
   };
+
+  useEffect(() => {
+    showSearchFilterResult();
+  }, [selectedFilter, isFiltered, searchQuery]);
 
   return (
     <View style={styles.container}>
       <View style={{paddingHorizontal: width * 0.064}}>
         <AppText style={styles.title}>Discover</AppText>
         <AppText style={styles.description}>
-          Search in Milion and more tracks Search in Milion and more tracks
           Search in Milion and more tracks
         </AppText>
-        <AppSearchInput setSearchQuery={setSearchQuery} />
+        <AppSearchInput
+          setSearchQuery={setSearchQuery}
+          selectedFilter={selectedFilter as IFilter}
+          setSelectedFilter={setSelectedFilter}
+          setIsFiltered={setIsFiltered}
+        />
       </View>
-      
       <RecyclerListView
         layoutProvider={layoutProvider}
         dataProvider={dataProvider}

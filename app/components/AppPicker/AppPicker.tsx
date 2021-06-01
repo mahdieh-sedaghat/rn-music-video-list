@@ -9,15 +9,19 @@ interface IProps {
   title: string;
   placeholder: string;
   onPress: () => void;
+  selectedItem: any;
+
   style?: any;
 }
 
-function AppPicker({title, placeholder, onPress, style}: IProps) {
+function AppPicker({title, placeholder, onPress, style, selectedItem}: IProps) {
   return (
     <View style={[styles.container, style]}>
       <View>
         <AppText style={styles.title}>{title}</AppText>
-        <AppText style={styles.placeholder}>{placeholder}</AppText>
+        <AppText style={styles.placeholder}>
+          {selectedItem ? selectedItem?.value : placeholder}
+        </AppText>
       </View>
       <TouchableHighlight
         underlayColor={defaultStyles.colors.hover}
