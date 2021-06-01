@@ -35,8 +35,21 @@ function MusicVideosScreen() {
     setPageNumber(pageNumber + 1);
   };
 
+  const filterByGenre = (data: any) => {
+    const temp = [];
+    for (const iterator of data) {
+      for (const item of selectedFilter?.genres as any) {
+        if (iterator?.genre_id === item?.id) {
+          temp.push(iterator);
+        }
+      }
+    }
+
+    return temp;
+  };
+
   const showSearchFilterResult = () => {
-    let temp = musicVideoList;
+    let temp: any = musicVideoList;
 
     if (searchQuery?.length) {
       temp = temp?.filter(
@@ -59,6 +72,7 @@ function MusicVideosScreen() {
         );
       }
       if (selectedFilter?.genres?.length) {
+        temp = filterByGenre(temp);
       }
     }
 

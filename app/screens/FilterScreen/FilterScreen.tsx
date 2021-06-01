@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Dimensions, StatusBar, Platform} from 'react-native';
 import AppButton from '../../components/AppButton';
 import AppModal from '../../components/AppModal/AppModal';
 import AppPicker from '../../components/AppPicker';
 import defaultStyles from '../../config/styles';
 import {IFilter} from '../../types/filter';
+import GenreScreen from '../GenreScreen/GenreScreen';
 import YearsScreen from '../YearsScreen';
 
 interface IProps {
@@ -21,11 +22,25 @@ function FilterScreen({
   setIsFiltered,
 }: IProps) {
   const [yearModalVisible, setYearModalVisible] = useState(false);
+  const [genreModalVisible, setGenreModalVisible] = useState(false);
+  const [text, setText] = useState('');
 
   const onShowResult = () => {
     setFilterModalVisible(false);
     setIsFiltered(true);
   };
+
+  useEffect(() => {
+    if (selectedFilter?.genres?.length) {
+      let temp = '';
+
+      selectedFilter?.genres?.map((item: any) => {
+        temp = temp + `${item?.name}, `;
+      });
+
+      setText(temp);
+    }
+  }, [selectedFilter]);
 
   return (
     <>
@@ -43,12 +58,14 @@ function FilterScreen({
             onPress={() => setYearModalVisible(true)}
             style={styles.picker}
             selectedItem={selectedFilter?.year}
+            selectedItemText={selectedFilter?.year?.value}
           />
           <AppPicker
             title="Genre"
             placeholder="Select Genre(s)"
-            onPress={() => {}}
+            onPress={() => setGenreModalVisible(true)}
             selectedItem={selectedFilter?.genres}
+            selectedItemText={text?.slice(0, text.length - 2)}
           />
         </View>
         <AppButton
@@ -62,6 +79,15 @@ function FilterScreen({
       <AppModal visible={yearModalVisible} handleVisible={setYearModalVisible}>
         <YearsScreen
           setYearModalVisible={setYearModalVisible}
+          selectedFilter={selectedFilter}
+          setSelectedFilter={setSelectedFilter}
+        />
+      </AppModal>
+      <AppModal
+        visible={genreModalVisible}
+        handleVisible={setGenreModalVisible}>
+        <GenreScreen
+          setGenreModalVisible={setGenreModalVisible}
           selectedFilter={selectedFilter}
           setSelectedFilter={setSelectedFilter}
         />
