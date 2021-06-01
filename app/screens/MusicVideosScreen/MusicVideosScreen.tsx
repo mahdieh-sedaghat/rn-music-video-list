@@ -3,6 +3,7 @@ import {Dimensions, FlatList, StyleSheet, View} from 'react-native';
 import AppSearchInput from '../../components/AppSearchInput';
 
 import AppText from '../../components/AppText';
+import EmptyState from '../../components/EmptyState/EmptyState';
 import ListItem from '../../components/ListItem';
 import defaultStyles from '../../config/styles';
 import MusicVideoAPI from '../../services/API/MusicVideoAPI';
@@ -103,21 +104,25 @@ function MusicVideosScreen() {
           setIsFiltered={setIsFiltered}
         />
       </View>
-      <FlatList
-        onEndReached={loadMore}
-        data={renderedList}
-        keyExtractor={(item: any) => item?.id?.toString()}
-        style={styles.flatList}
-        numColumns={2}
-        columnWrapperStyle={styles.columnStyle}
-        renderItem={({item}) => (
-          <ListItem
-            title={item.artist}
-            subTitle={item.title}
-            image={item.image_url}
-          />
-        )}
-      />
+      {renderedList?.length ? (
+        <FlatList
+          onEndReached={loadMore}
+          data={renderedList}
+          keyExtractor={(item: any) => item?.id?.toString()}
+          style={styles.flatList}
+          numColumns={2}
+          columnWrapperStyle={styles.columnStyle}
+          renderItem={({item}) => (
+            <ListItem
+              title={item.artist}
+              subTitle={item.title}
+              image={item.image_url}
+            />
+          )}
+        />
+      ) : (
+        <EmptyState />
+      )}
     </View>
   );
 }
@@ -130,6 +135,7 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingTop: 24,
+    minHeight: '100%',
   },
   description: {
     fontSize: 12,
