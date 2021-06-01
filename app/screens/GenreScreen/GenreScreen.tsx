@@ -40,9 +40,19 @@ function GenreScreen({
     getList();
   }, []);
 
-  const onSelectGenres = () => {
+  const onSubmit = () => {
     setSelectedFilter({...selectedFilter, genres: selectedGenres});
     setGenreModalVisible(false);
+  };
+
+  const onSelectItem = (data: any) => {
+    if (selectedGenres?.find((genre: any) => genre?.id === data?.id)) {
+      setSelectedGenres(
+        selectedGenres?.filter((iterator: any) => iterator?.id !== data?.id),
+      );
+    } else {
+      setSelectedGenres([...selectedGenres, {...data, selected: true}]);
+    }
   };
 
   return (
@@ -56,12 +66,10 @@ function GenreScreen({
       <FlatList
         style={styles.list}
         data={genreList}
-        keyExtractor={(item: any) => item?.id?.toString()}
+        keyExtractor={(data: any) => data?.id?.toString()}
         renderItem={({item}) => (
           <TouchableOpacity
-            onPress={() => {
-              setSelectedGenres([...selectedGenres, {...item, selected: true}]);
-            }}
+            onPress={() => onSelectItem(item)}
             style={styles.item}>
             <AppText>{item?.name}</AppText>
             {selectedGenres?.find((genre: any) => genre?.id === item?.id) && (
@@ -70,7 +78,7 @@ function GenreScreen({
           </TouchableOpacity>
         )}
       />
-      <AppButton title="Show Result" onPress={onSelectGenres} />
+      <AppButton title="Show Result" onPress={onSubmit} />
     </View>
   );
 }
