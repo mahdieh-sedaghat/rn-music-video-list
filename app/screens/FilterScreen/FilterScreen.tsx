@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Dimensions, StatusBar, Platform} from 'react-native';
 import AppButton from '../../components/AppButton';
 import AppModal from '../../components/AppModal/AppModal';
 import AppPicker from '../../components/AppPicker';
@@ -29,21 +29,35 @@ function FilterScreen({
 
   return (
     <>
-      <View>
-        <AppPicker
-          title="Year"
-          placeholder="Select Year"
-          onPress={() => setYearModalVisible(true)}
-          style={styles.picker}
-          selectedItem={selectedFilter?.year}
+      <View
+        style={{
+          height:
+            Dimensions.get('window').height -
+            72 -
+            (Platform.OS === 'android' ? StatusBar.currentHeight : 0),
+        }}>
+        <View style={styles.pickerWrap}>
+          <AppPicker
+            title="Year"
+            placeholder="Select Year"
+            onPress={() => setYearModalVisible(true)}
+            style={styles.picker}
+            selectedItem={selectedFilter?.year}
+          />
+          <AppPicker
+            title="Genre"
+            placeholder="Select Genre(s)"
+            onPress={() => {}}
+            selectedItem={selectedFilter?.genres}
+          />
+        </View>
+        <AppButton
+          title="Show Result"
+          onPress={onShowResult}
+          disabled={
+            !selectedFilter?.year?.key && !selectedFilter?.genres?.length
+          }
         />
-        <AppPicker
-          title="Genre"
-          placeholder="Select Genre(s)"
-          onPress={() => {}}
-          selectedItem={selectedFilter?.genres}
-        />
-        <AppButton title="Show Result" onPress={onShowResult} />
       </View>
       <AppModal visible={yearModalVisible} handleVisible={setYearModalVisible}>
         <YearsScreen
@@ -60,6 +74,9 @@ const styles = StyleSheet.create({
   picker: {
     borderBottomColor: defaultStyles.colors.hover,
     borderBottomWidth: 1,
+  },
+  pickerWrap: {
+    flex: 1,
   },
 });
 

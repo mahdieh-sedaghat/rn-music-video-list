@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Dimensions,
-  FlatList,
-  Platform,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {Dimensions, FlatList, StyleSheet, View} from 'react-native';
 import AppSearchInput from '../../components/AppSearchInput';
 
 import AppText from '../../components/AppText';

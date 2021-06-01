@@ -18,7 +18,8 @@ function AppButton({title, onPress, color = 'primary', disabled}: IProps) {
           backgroundColor: defaultStyles.colors[color],
         },
       ]}
-      onPress={onPress}>
+      onPress={onPress}
+      disabled={disabled}>
       <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    width: '100%',
+    margin: 24,
   },
   text: {
     color: defaultStyles.colors.white,
