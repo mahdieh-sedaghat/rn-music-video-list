@@ -20,10 +20,16 @@ function MusicVideosScreen() {
 
   useEffect(() => {
     async function getList() {
-      const response = await MusicVideoAPI.getMusicVideoList();
-      setMusicVideoList(response?.data?.videos);
-      setSearchResult(response?.data?.videos);
+      try {
+        const response = await MusicVideoAPI.getMusicVideoList();
+        setMusicVideoList(response?.data?.videos);
+        setSearchResult(response?.data?.videos);
+      } catch (error) {
+        setMusicVideoList([]);
+        setSearchResult([]);
+      }
     }
+
     getList();
   }, []);
 
