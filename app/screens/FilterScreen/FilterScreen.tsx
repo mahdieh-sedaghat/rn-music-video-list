@@ -1,79 +1,40 @@
-import React from 'react';
-import {
-  View,
-  TouchableHighlight,
-  StyleSheet,
-  Platform,
-  StatusBar,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
+import React, {useState} from 'react';
+import {View, StyleSheet} from 'react-native';
+import AppModal from '../../components/AppModal/AppModal';
 import AppPicker from '../../components/AppPicker';
-import AppText from '../../components/AppText';
 import defaultStyles from '../../config/styles';
+import YearsScreen from '../YearsScreen';
 
-interface IProps {
-  handleVisible: (data: boolean) => void;
-}
+function FilterScreen() {
+  const [yearModalVisible, setYearModalVisible] = useState(false);
 
-function FilterScreen({handleVisible}: IProps) {
   return (
     <>
-      <View style={styles.header}>
-        <TouchableHighlight
-          underlayColor={defaultStyles.colors.hover}
-          onPress={() => {
-            handleVisible(false);
-          }}
-          style={styles.icon}>
-          <Icon
-            name="arrow-left"
-            size={24}
-            color={defaultStyles.colors.white}
-          />
-        </TouchableHighlight>
-        <AppText style={styles.title}>Filter</AppText>
+      <View>
+        <AppPicker
+          title="Year"
+          placeholder="Select Year"
+          onPress={() => setYearModalVisible(true)}
+          style={styles.picker}
+        />
+        <AppPicker
+          title="Genre"
+          placeholder="Select Genre(s)"
+          onPress={() => {}}
+        />
       </View>
-      <AppPicker
-        title="Year"
-        placeholder="Select Year"
-        onPress={() => {}}
-        style={styles.picker}
-      />
-      <AppPicker
-        title="Genre"
-        placeholder="Select Genre(s)"
-        onPress={() => {}}
-      />
+      <AppModal visible={yearModalVisible} handleVisible={setYearModalVisible}>
+        <YearsScreen />
+      </AppModal>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 24,
-    paddingHorizontal: 12,
-    width: '100%',
-    backgroundColor: defaultStyles.colors.secondary,
-    marginTop: Platform.OS === 'android' ? -StatusBar.currentHeight : 0,
-  },
-  icon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    left: 12,
-    top: 12,
-  },
   picker: {
-    borderBottomColor: defaultStyles.colors.gray,
+    borderBottomColor: defaultStyles.colors.hover,
     borderBottomWidth: 1,
   },
-  title: {fontSize: 16, fontWeight: '600'},
 });
 
 export default FilterScreen;

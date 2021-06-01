@@ -34,8 +34,8 @@ function AppSearchInput() {
           <Icon name="sliders" color={defaultStyles.colors.white} size={24} />
         </TouchableWithoutFeedback>
       </View>
-      <AppModal visible={modalVisible}>
-        <FilterScreen handleVisible={setModalVisible} />
+      <AppModal visible={modalVisible} handleVisible={setModalVisible}>
+        <FilterScreen />
       </AppModal>
     </>
   );
