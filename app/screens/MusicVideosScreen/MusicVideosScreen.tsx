@@ -15,7 +15,7 @@ function MusicVideosScreen() {
   const [renderedList, setRenderedList] = useState(musicVideoList.slice(0, 6));
   const [pageNumber, setPageNumber] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<IFilter>();
+  const [selectedFilter, setSelectedFilter] = useState<IFilter>([]);
   const [isFiltered, setIsFiltered] = useState<boolean>(false);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ function MusicVideosScreen() {
   const filterByGenre = (data: any) => {
     const temp = [];
     for (const iterator of data) {
-      for (const item of selectedFilter?.genres as any) {
+      for (const item of selectedFilter?.genres) {
         if (iterator?.genre_id === item?.id) {
           temp.push(iterator);
         }

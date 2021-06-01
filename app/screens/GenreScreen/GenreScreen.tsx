@@ -27,9 +27,9 @@ function GenreScreen({
   setSelectedFilter,
   setGenreModalVisible,
 }: IProps) {
-  const [genreList, setGenreList] = useState([]);
+  const [genreList, setGenreList] = useState<any>([]);
   const [selectedGenres, setSelectedGenres] = useState<any>(
-    selectedFilter?.genres,
+    selectedFilter?.genres || [],
   );
 
   useEffect(() => {
