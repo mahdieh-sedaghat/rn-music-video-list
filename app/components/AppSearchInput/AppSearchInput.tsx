@@ -11,8 +11,18 @@ import defaultStyles from '../../config/styles';
 import FilterScreen from '../../screens/FilterScreen';
 import AppModal from '../AppModal/AppModal';
 
-function AppSearchInput() {
+interface IProps {
+  setSearchQuery: (data: any) => void;
+}
+
+function AppSearchInput({setSearchQuery}: IProps) {
   const [modalVisible, setModalVisible] = useState(false);
+
+  const handleSearch = (text: string) => {
+    setTimeout(() => {
+      setSearchQuery(text);
+    }, 500);
+  };
 
   return (
     <>
@@ -24,9 +34,10 @@ function AppSearchInput() {
           style={styles.search}
         />
         <TextInput
-          style={[defaultStyles.text, {flex: 1}]}
+          style={[defaultStyles.text, { flex: 1 }]}
           placeholder="Artists, Songs, Or Podcats"
           placeholderTextColor={defaultStyles.colors.gray}
+          onChangeText={text => handleSearch(text)}
         />
         <TouchableWithoutFeedback
           style={styles.filter}

@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Dimensions, Platform, StatusBar, StyleSheet, View} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
 import AppSearchInput from '../../components/AppSearchInput';
 
@@ -9,12 +16,12 @@ import defaultStyles from '../../config/styles';
 import MusicVideoAPI from '../../services/API/MusicVideoAPI';
 
 function MusicVideosScreen() {
-  const [musicVideoList, setMusicVideoList] = useState([]);
-  const [twoColumnList, setTwoColumnList] = useState([]);
-  const [renderedList, setRenderedList] = useState(twoColumnList.slice(0, 6));
-  const [pageNumber, setPageNumber] = useState(0);
-
   const {width} = Dimensions.get('window');
+  const [musicVideoList, setMusicVideoList] = useState([]);
+  const [searchResult, setSearchResult] = useState([]);
+  const [renderedList, setRenderedList] = useState(musicVideoList.slice(0, 6));
+  const [pageNumber, setPageNumber] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
   const [dataProvider, setDataProvider] = useState(
     new DataProvider((r1, r2) => {
       return r1 !== r2;
@@ -33,47 +40,31 @@ function MusicVideosScreen() {
   useEffect(() => {
     async function getList() {
       const response = await MusicVideoAPI.getMusicVideoList();
-      // setGenreList(response?.data?.genres);
       setMusicVideoList(response?.data?.videos);
+      setSearchResult(response?.data?.videos);
     }
     getList();
   }, []);
-
-  const generateTwoColumnList = (data: any) => {
-    let i,
-      j,
-      temp: any = [],
-      chunk = 2;
-    for (i = 0, j = data.length; i < j; i += chunk) {
-      temp.push(data.slice(i, i + chunk));
-    }
-    setTwoColumnList(temp);
-  };
-
-  useEffect(() => {
-    generateTwoColumnList(musicVideoList);
-  }, [musicVideoList]);
 
   useEffect(() => {
     setDataProvider(prevState => prevState.cloneWithRows(renderedList));
   }, [renderedList]);
 
   useEffect(() => {
-    setRenderedList(twoColumnList.slice(0, pageNumber * 6));
-  }, [pageNumber, twoColumnList]);
+    setRenderedList(searchResult.slice(0, pageNumber * 6));
+  }, [pageNumber, searchResult]);
+
+  useEffect(() => {
+    generateSearchResult();
+  }, [searchQuery]);
 
   const rowRenderer = (type, data, index) => {
     return (
       <View style={styles.row}>
         <ListItem
-          title={data[0].artist}
-          subTitle={data[0].title}
-          image={data[0].image_url}
-        />
-        <ListItem
-          title={data[1].artist}
-          subTitle={data[1].title}
-          image={data[1].image_url}
+          title={data.artist}
+          subTitle={data.title}
+          image={data.image_url}
         />
       </View>
     );
@@ -84,15 +75,38 @@ function MusicVideosScreen() {
     setDataProvider(prevState => prevState.cloneWithRows(renderedList));
   };
 
+  const generateSearchResult = () => {
+    if (searchQuery?.length) {
+      setSearchResult(
+        searchResult?.filter(
+          (item: any) =>
+            item?.artist
+              ?.toString()
+              ?.toLowerCase()
+              ?.includes(searchQuery?.toLowerCase()) ||
+            item?.title
+              ?.toString()
+              ?.toLowerCase()
+              .includes(searchQuery?.toLowerCase()),
+        ),
+      );
+    } else {
+      setSearchResult(musicVideoList);
+    }
+    setPageNumber(1);
+  };
+
   return (
     <View style={styles.container}>
       <View style={{paddingHorizontal: width * 0.064}}>
         <AppText style={styles.title}>Discover</AppText>
         <AppText style={styles.description}>
+          Search in Milion and more tracks Search in Milion and more tracks
           Search in Milion and more tracks
         </AppText>
-        <AppSearchInput />
+        <AppSearchInput setSearchQuery={setSearchQuery} />
       </View>
+      
       <RecyclerListView
         layoutProvider={layoutProvider}
         dataProvider={dataProvider}
@@ -110,7 +124,9 @@ function MusicVideosScreen() {
         //       />
         //     )
         //   }}
-        scrollViewProps={{style: {paddingHorizontal: width * 0.064}}}
+        scrollViewProps={{
+          style: {paddingHorizontal: width * 0.064},
+        }}
       />
     </View>
   );
